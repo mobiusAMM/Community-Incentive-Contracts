@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MobiusCommunityPayment {
+interface CommunityPaymentEvents {
     enum BugLevel {
         BASIC,
         MEDIUM,
@@ -54,4 +54,36 @@ contract MobiusCommunityPayment {
         address payee,
         uint256 reward
     );
+}
+
+contract CommunityPayment is CommunityPaymentEvents, Ownable {
+    mapping(address => bool) public admin;
+    uint256 public numberOfAdmin;
+    uint256 public threshold;
+
+    IERC20 public rewardToken;
+    uint256[3] public bugReportPayLevels;
+
+    constructor(
+        address owner,
+        address[] memory initialAdmin,
+        uint256 initialThreshold,
+        IERC20 initialRewardToken,
+        uint256[3] memory bugReportLevels
+    ) {
+        require(
+            threshold <= initialAdmin.length,
+            "Threshold > number of admin"
+        );
+        _transferOwnership(owner); // Give full ownership to the owner address
+        rewardToken = initialRewardToken;
+        threshold = initialThreshold;
+        numberOfAdmin = initialAdmin.length;
+
+        for (uint256 i = 0; i < numberOfAdmin; i++) {
+            admin[initialAdmin[i]] = true;
+        }
+
+        bugReportPayLevels = bugReportLevels;
+    }
 }
