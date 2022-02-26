@@ -25,8 +25,10 @@ interface CommunityPaymentEvents {
         uint256 id;
         address payee;
         uint256 requestedReward;
-        bool fulfilled;
         uint256 approvals;
+        uint256 timeOfRequest;
+        uint256 timeOfFulfillment;
+        bool killed;
     }
 
     event BugReportCreated(
@@ -167,6 +169,28 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
             newReport.id,
             payee,
             perceivedLevel,
+            block.timestamp,
+            description
+        );
+    }
+
+    function createRequest(
+        address payee,
+        uint256 requestedReward,
+        string memory description
+    ) external {
+        GeneralRequest memory newRequest;
+        newRequest.payee = payee;
+        newRequest.id = reports.length;
+        newRequest.requestedReward = requestedReward;
+        newRequest.timeOfRequest = block.timestamp;
+
+        requests.push(newRequest);
+
+        emit RequestCreated(
+            newRequest.id,
+            payee,
+            requestedReward,
             block.timestamp,
             description
         );
