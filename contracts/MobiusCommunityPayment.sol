@@ -130,4 +130,20 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
             newAmount
         );
     }
+
+    function updateBugPaymentLevel(BugLevel level, uint256 newAmount)
+        external
+        onlyOwner
+    {
+        _updateBugPaymentLevel(level, newAmount);
+    }
+
+    function updateAllBugPaymentLevels(uint256[3] memory newAmounts)
+        external
+        onlyOwner
+    {
+        for (uint256 i = 0; i < 3; i++) {
+            _updateBugPaymentLevel(BugLevel(i), newAmounts[i]);
+        }
+    }
 }
