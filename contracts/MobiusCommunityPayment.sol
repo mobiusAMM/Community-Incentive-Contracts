@@ -54,6 +54,10 @@ interface CommunityPaymentEvents {
         address payee,
         uint256 reward
     );
+
+    event AdminAdded(address indexed account, uint256 time);
+
+    event AdminRemoved(address indexed account, uint256 time);
 }
 
 contract CommunityPayment is CommunityPaymentEvents, Ownable {
@@ -85,5 +89,24 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
         }
 
         bugReportPayLevels = bugReportLevels;
+    }
+
+    modifier isAdmin(address loc) {
+        require(admin[loc], "Not an admin");
+        _;
+    }
+
+    function addAdmin(address account) external onlyOwner {
+        require(!admin[account], "Already admin");
+        admin[account] = true;
+        numberOfAdmin++;
+
+        emit AdminAdded(account, block.timestamp);
+    }
+
+    function removeAdmin(address account) external onlyOwner isAdmin(account) {
+        admin[account] = false;
+        numberOfAdmin--;
+        emit AdminRemoved(account, block.timestamp);
     }
 }
