@@ -13,7 +13,7 @@ interface CommunityPaymentEvents {
 
     struct BugReport {
         uint256 id;
-        address origin;
+        address payee;
         BugLevel perceivedLevel;
         uint256 timeOfRequest;
         uint256 timeOfFulfillment;
@@ -23,7 +23,7 @@ interface CommunityPaymentEvents {
 
     struct GeneralRequest {
         uint256 id;
-        address origin;
+        address payee;
         uint256 requestedReward;
         bool fulfilled;
         uint256 approvals;
@@ -74,6 +74,9 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
 
     IERC20 public rewardToken;
     uint256[3] public bugReportPayLevels;
+
+    BugReport[] public reports;
+    GeneralRequest[] public requests;
 
     constructor(
         address owner,
@@ -145,5 +148,27 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
         for (uint256 i = 0; i < 3; i++) {
             _updateBugPaymentLevel(BugLevel(i), newAmounts[i]);
         }
+    }
+
+    function createBugReport(
+        address payee,
+        BugLevel perceivedLevel,
+        string memory description
+    ) external {
+        BugReport memory newReport;
+        newReport.payee = payee;
+        newReport.id = reports.length;
+        newReport.perceivedLevel = perceivedLevel;
+        newReport.timeOfRequest = block.timestamp;
+
+        reports.push(newReport);
+
+        emit BugReportCreated(
+            newReport.id,
+            payee,
+            perceivedLevel,
+            block.timestamp,
+            description
+        );
     }
 }
