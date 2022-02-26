@@ -1,47 +1,37 @@
-# Advanced Sample Hardhat Project
+# Community Incentive Contracts
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+General contracts to facilitate greater community involvement for a protocol.
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+# Bug Reporting
 
-Try running some of the following tasks:
+### For a bug report, a user will submit:
+    - Description of bug
+    - Steps to reproduce
+    - Any additional info pertaining to the bug
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.ts
-TS_NODE_FILES=true npx ts-node scripts/deploy.ts
-npx eslint '**/*.{js,ts}'
-npx eslint '**/*.{js,ts}' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
-```
+### Bug Report rewards will be broken down into three levels:
 
-# Etherscan verification
+    1. Basic - 500 MOBI reward
+        - Includes typos, styling, non-operational bugs
+    2. Medium - 1,000 MOBI reward
+        - These are bugs that might not break the website but do hinder some functions. Example: A farm page breaks if trying to access it directly via url rather             than through the pool page
+    3. Important - 10,000 MOBI reward
+        - These are bugs that completely break the website and have no workaround.  Must show that workarounds have been attempted.
 
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
+## General Requests
 
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
+### A user can submit a reward request composed of the following:
 
-```shell
-hardhat run --network ropsten scripts/sample-script.ts
-```
+    - Description of task done
+    - Time spent working on task
+    - Perceived value add of task
+    - Requested reward
+    - Proof of work (a link to pull request, transaction hash, etc...)
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+Reward request approval and subsequent payout is at the discretion of fund admins
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
-```
+### For both reward request and bug report payouts, the following is required:
 
-# Performance optimizations
-
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
-# CommunityIncentiveContracts
+    - The requesting address has not received a payout within the alloted cooldown period, as controlled by the DAO.  Initial cooldown will be 1 hour.
+    - The number of approvals by reward admin has exceeded the threshold.  Both threshold and admins will be controlled by the DAO, with initial values 
+      set by core contributors
