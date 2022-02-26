@@ -58,6 +58,13 @@ interface CommunityPaymentEvents {
     event AdminAdded(address indexed account, uint256 time);
 
     event AdminRemoved(address indexed account, uint256 time);
+
+    event BugReportLevelChanged(
+        BugLevel indexed level,
+        uint256 indexed time,
+        uint256 previousAmount,
+        uint256 newAmount
+    );
 }
 
 contract CommunityPayment is CommunityPaymentEvents, Ownable {
@@ -108,5 +115,19 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
         admin[account] = false;
         numberOfAdmin--;
         emit AdminRemoved(account, block.timestamp);
+    }
+
+    function _updateBugPaymentLevel(BugLevel level, uint256 newAmount)
+        internal
+    {
+        uint256 previousAmount = bugReportPayLevels[uint256(level)];
+        bugReportPayLevels[uint256(level)] = newAmount;
+
+        emit BugReportLevelChanged(
+            level,
+            block.timestamp,
+            previousAmount,
+            newAmount
+        );
     }
 }
