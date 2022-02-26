@@ -15,7 +15,9 @@ contract MobiusCommunityPayment {
         uint256 id;
         address origin;
         BugLevel perceivedLevel;
-        bool fulfilled;
+        uint256 timeOfRequest;
+        uint256 timeOfFulfillment;
+        bool killed;
         uint256 approvals;
     }
 
@@ -26,4 +28,30 @@ contract MobiusCommunityPayment {
         bool fulfilled;
         uint256 approvals;
     }
+
+    event BugReportCreated(
+        uint256 indexed id,
+        address indexed origin,
+        BugLevel severity,
+        uint256 time,
+        string description
+    );
+
+    event RequestCreated(
+        uint256 indexed id,
+        address indexed origin,
+        uint256 requestedReward,
+        uint256 time,
+        string description
+    );
+
+    event BugReportApproved(uint256 indexed id, address admin);
+    event RequestApproved(uint256 indexed id, address admin);
+
+    event ReportPaid(
+        bool indexed isBugReport,
+        uint256 indexed id,
+        address payee,
+        uint256 reward
+    );
 }
