@@ -80,6 +80,9 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
     BugReport[] public reports;
     GeneralRequest[] public requests;
 
+    mapping(address => mapping(uint256 => bool)) approvedBugReports;
+    mapping(address => mapping(uint256 => bool)) approvedRequests;
+
     constructor(
         address owner,
         address[] memory initialAdmin,
@@ -227,5 +230,25 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
         if (approvals > threshold) {
             _payRequest(isBug, id);
         }
+    }
+
+    function approveBugReport(uint256 id) external isAdmin(msg.sender) {
+        require(
+            !approvedBugReports[msg.sender][id],
+            "Admin has already approved this id"
+        );
+        require(!reports[id].killed, "Bug report has been killed");
+        _approve(true, id);
+        emit BugReportApproved(id, msg.sender);
+    }
+
+    function approveRequest(uint256 id) external isAdmin(msg.sender) {
+        require(
+            !approvedRequests[msg.sender][id],
+            "Admin has already approved this id"
+        );
+        require(!requests[id].killed, "Request has been killed");
+        _approve(false, id);
+        emit RequestApproved(id, msg.sender);
     }
 }
