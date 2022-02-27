@@ -195,4 +195,37 @@ contract CommunityPayment is CommunityPaymentEvents, Ownable {
             description
         );
     }
+
+    function _payRequest(bool isBug, uint256 id) internal {
+        uint256 amountToPay;
+        address payee;
+        if (isBug) {
+            amountToPay = bugReportPayLevels[
+                uint256(reports[id].perceivedLevel)
+            ];
+            reports[id].timeOfFulfillment = block.timestamp;
+            payee = reports[id].payee;
+        } else {
+            amountToPay = requests[id].requestedReward;
+            requests[id].timeOfFulfillment = block.timestamp;
+            payee = requests[id].payee;
+        }
+        rewardToken.transfer(payee, amountToPay);
+
+        emit ReportPaid(isBug, id, payee, amountToPay);
+    }
+
+    function _approve(bool isBug, uint256 id) internal {
+        uint256 approvals;
+        if (isBug) {
+            BugReport memory report = reports[id];
+            approvals = ++report.approvals;
+        } else {
+            GeneralRequest memory request = requests[id];
+            approvals = ++request.approvals;
+        }
+        if (approvals > threshold) {
+            _payRequest(isBug, id);
+        }
+    }
 }
